@@ -19,10 +19,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// Connect to MongoDB (no deprecated options)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB Atlas');
     app.listen(5000, () => console.log('🚀 Server running on port 5000'));
   })
   .catch((err) => console.error('❌ MongoDB connection error:', err));
-
