@@ -9,9 +9,9 @@ import JobDetails from './pages/JobDetails';
 import CandidateDashboard from './pages/CandidateDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 import PostJob from './pages/PostJob';
-import ApplicantsPage from './pages/ApplicantsPage'; // ✅ New Page
+import ApplicantsPage from './pages/ApplicantsPage';
+import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
-import NotFound from './pages/NotFound'; // Optional but good to have
 
 function App() {
   return (
@@ -20,23 +20,24 @@ function App() {
         <div className="App">
           <Navbar />
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/jobs/:id" element={<JobDetails />} />
 
-            {/* Candidate dashboard */}
-            <Route
+            {/* Candidate Dashboard */}
+            <Route 
               path="/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['candidate']}>
+                <ProtectedRoute>
                   <CandidateDashboard />
                 </ProtectedRoute>
               }
             />
 
-            {/* Employer dashboard */}
-            <Route
+            {/* Employer Dashboard (Main and alias path) */}
+            <Route 
               path="/employer/dashboard"
               element={
                 <ProtectedRoute allowedRoles={['employer']}>
@@ -44,9 +45,17 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route 
+              path="/employer-dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['employer']}>
+                  <EmployerDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Post a new job */}
-            <Route
+            {/* Post Job (Employer only) */}
+            <Route 
               path="/employer/post-job"
               element={
                 <ProtectedRoute allowedRoles={['employer']}>
@@ -55,8 +64,8 @@ function App() {
               }
             />
 
-            {/* ✅ View applicants for a specific job */}
-            <Route
+            {/* View Applicants for a Specific Job */}
+            <Route 
               path="/employer/jobs/:jobId/applicants"
               element={
                 <ProtectedRoute allowedRoles={['employer']}>
@@ -65,7 +74,7 @@ function App() {
               }
             />
 
-            {/* Fallback route for unmatched URLs */}
+            {/* Catch-all route for 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
