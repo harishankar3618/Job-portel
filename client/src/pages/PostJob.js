@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import JobForm from '../components/JobForm';
-import * as jobService from '../services/jobService';
+import { jobService } from '../services/jobService';
+
+// REMOVE this line: await jobService.createJob(jobData);
 
 const PostJob = () => {
   const [loading, setLoading] = useState(false);

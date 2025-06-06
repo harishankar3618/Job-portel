@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import * as jobService from '../services/jobService';
 import * as applicationService from '../services/applicationService';
 
@@ -10,7 +10,7 @@ const ApplyJob = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
-  const [resume, setResume] = useState('');
+  const [resumeFile, setResumeFile] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -32,7 +32,7 @@ const ApplyJob = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!coverLetter.trim()) {
       setError('Cover letter is required');
       return;
@@ -42,13 +42,20 @@ const ApplyJob = () => {
     setError('');
 
     try {
-      await applicationService.applyForJob({
-        jobId: id,
-        coverLetter,
-        resume: resume || user.profile?.resume
-      });
-      
-      navigate('/candidate-dashboard', { 
+      const formData = new FormData();
+      formData.append('jobId', id);
+      formData.append('coverLetter', coverLetter);
+
+      if (resumeFile) {
+        formData.append('resume', resumeFile);
+      } else if (user.profile?.resume) {
+        // If no new file uploaded, send profile resume URL as fallback
+        formData.append('resumeUrl', user.profile.resume);
+      }
+
+      await applicationService.applyForJob(formData);
+
+      navigate('/dashboard', { 
         state: { message: 'Application submitted successfully!' }
       });
     } catch (err) {
@@ -149,21 +156,20 @@ const ApplyJob = () => {
                 />
               </div>
 
-              {/* Resume URL */}
+              {/* Resume Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Resume URL (Optional)
+                  Resume Upload (PDF, DOC) - Optional
                 </label>
                 <input
-                  type="url"
-                  value={resume}
-                  onChange={(e) => setResume(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="https://example.com/your-resume.pdf"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setResumeFile(e.target.files[0])}
+                  className="w-full"
                 />
-                {user.profile?.resume && !resume && (
+                {!resumeFile && user.profile?.resume && (
                   <p className="mt-1 text-sm text-gray-500">
-                    Your profile resume will be used: 
+                    Using profile resume: 
                     <a 
                       href={user.profile.resume} 
                       target="_blank" 
@@ -200,7 +206,7 @@ const ApplyJob = () => {
         {/* Job Details Preview */}
         <div className="mt-6 bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Job Details</h3>
-          
+
           <div className="space-y-4">
             <div>
               <h4 className="font-medium text-gray-900">Description</h4>
