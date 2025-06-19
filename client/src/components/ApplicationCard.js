@@ -5,15 +5,15 @@ const ApplicationCard = ({ application, userRole = 'candidate', onStatusChange }
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'badge badge-secondary';
       case 'reviewed':
-        return 'bg-blue-100 text-blue-800';
+        return 'badge' + ' ' + 'bg-blue-100 text-blue-800';
       case 'accepted':
-        return 'bg-green-100 text-green-800';
+        return 'badge badge-primary';
       case 'rejected':
-        return 'bg-red-100 text-red-800';
+        return 'badge' + ' ' + 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'badge badge-secondary';
     }
   };
 
@@ -24,22 +24,22 @@ const ApplicationCard = ({ application, userRole = 'candidate', onStatusChange }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+    <div className="glass-card p-6 hover:shadow-lg transition-shadow">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           {userRole === 'candidate' ? (
             <>
-              <h3 className="text-lg font-semibold text-gray-900">
-                <Link 
+              <h3 className="text-lg font-semibold text-white mb-2">
+                <Link
                   to={`/job/${application.job._id}`}
-                  className="hover:text-blue-600"
+                  className="hover:text-cyan-400 transition-colors"
                 >
                   {application.job.title}
                 </Link>
               </h3>
-              <p className="text-gray-600">{application.job.company}</p>
-              <div className="mt-1 text-sm text-gray-500">
+              <p className="text-gray-300 mb-2">{application.job.company}</p>
+              <div className="mt-1 text-sm text-gray-400">
                 <span>{application.job.location}</span>
                 <span className="mx-2">•</span>
                 <span className="capitalize">{application.job.jobType}</span>
@@ -56,17 +56,15 @@ const ApplicationCard = ({ application, userRole = 'candidate', onStatusChange }
             </>
           ) : (
             <>
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 {application.applicant.name}
               </h3>
-              <p className="text-gray-600">{application.applicant.email}</p>
+              <p className="text-gray-300">{application.applicant.email}</p>
             </>
           )}
         </div>
         <div className="flex items-center">
-          <span 
-            className={`px-3 py-1 rounded-full text-sm ${getStatusColor(application.status)}`}
-          >
+          <span className={getStatusColor(application.status)}>
             {application.status}
           </span>
         </div>
@@ -74,21 +72,21 @@ const ApplicationCard = ({ application, userRole = 'candidate', onStatusChange }
 
       {/* Body */}
       <div className="mt-4">
-        <p className="text-gray-700 whitespace-pre-line">{application.coverLetter}</p>
+        <p className="text-gray-200 whitespace-pre-line">{application.coverLetter}</p>
       </div>
 
       {/* Footer */}
       {userRole === 'employer' && application.status === 'pending' && (
-        <div className="mt-4 flex justify-end">
-          <button 
+        <div className="mt-4 flex justify-end gap-3">
+          <button
             onClick={() => handleStatusChange('rejected')}
-            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded mr-2"
+            className="btn-danger"
           >
             Reject
           </button>
-          <button 
+          <button
             onClick={() => handleStatusChange('accepted')}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+            className="btn-primary"
           >
             Accept
           </button>

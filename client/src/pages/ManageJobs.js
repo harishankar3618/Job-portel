@@ -37,7 +37,7 @@ const ManageJobs = () => {
 
     try {
       const response = await jobService.updateJob(editingJob._id, jobData);
-      setJobs(jobs.map(job => 
+      setJobs(jobs.map(job =>
         job._id === editingJob._id ? response.data : job
       ));
       setEditingJob(null);
@@ -62,7 +62,7 @@ const ManageJobs = () => {
   const toggleJobStatus = async (jobId, currentStatus) => {
     try {
       const response = await jobService.updateJob(jobId, { isActive: !currentStatus });
-      setJobs(jobs.map(job => 
+      setJobs(jobs.map(job =>
         job._id === jobId ? response.data : job
       ));
     } catch (err) {
@@ -70,35 +70,39 @@ const ManageJobs = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-8">Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="loading-spinner"></div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Manage Jobs</h1>
+    <div className="min-h-screen py-8">
+      <div className="container">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-white">Manage Jobs</h1>
           <Link
             to="/post-job"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            className="btn-primary"
           >
             Post New Job
           </Link>
         </div>
 
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="alert-error mb-6">
             {error}
           </div>
         )}
 
         {editingJob && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Edit Job</h2>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="glass-card max-w-3xl w-full max-h-screen overflow-y-auto p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-white">Edit Job</h2>
                 <button
                   onClick={() => setEditingJob(null)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-400 hover:text-white text-2xl leading-none"
                 >
                   ×
                 </button>
@@ -113,82 +117,82 @@ const ManageJobs = () => {
           </div>
         )}
 
-        <div className="bg-white shadow overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-200">
+        <div className="glass-card overflow-hidden">
+          <div className="divide-y divide-white/10">
             {jobs.map((job) => (
-              <li key={job._id} className="px-6 py-4">
+              <div key={job._id} className="job-card border-none rounded-none">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium text-gray-900">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-medium text-white">
                         {job.title}
                       </h3>
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          job.isActive 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
+                      <div className="flex items-center space-x-3">
+                        <span className={`badge ${
+                          job.isActive
+                            ? 'badge-primary'
+                            : 'badge-secondary'
                         }`}>
                           {job.isActive ? 'Active' : 'Inactive'}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-300">
                           {job.applicationsCount} applications
                         </span>
                       </div>
                     </div>
-                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-gray-400 mb-3">
                       <span>{job.location}</span>
                       <span className="mx-2">•</span>
                       <span className="capitalize">{job.jobType}</span>
                       <span className="mx-2">•</span>
                       <span>Posted {new Date(job.createdAt).toLocaleDateString()}</span>
                     </div>
-                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                    <p className="text-sm text-gray-300 line-clamp-2">
                       {job.description}
                     </p>
                   </div>
 
-                  <div className="ml-4 flex items-center space-x-2">
+                  <div className="ml-6 flex items-center space-x-3">
                     <Link
                       to={`/job/${job._id}/applications`}
-                      className="text-blue-600 hover:text-blue-800 text-sm"
+                      className="text-cyan-300 hover:text-cyan-200 text-sm font-medium transition-colors"
                     >
                       View Applications
                     </Link>
                     <button
                       onClick={() => toggleJobStatus(job._id, job.isActive)}
-                      className={`px-3 py-1 text-sm rounded ${
+                      className={`btn-secondary text-xs ${
                         job.isActive
-                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                          ? 'hover:bg-red-500/20 hover:border-red-400'
+                          : 'hover:bg-green-500/20 hover:border-green-400'
                       }`}
                     >
                       {job.isActive ? 'Deactivate' : 'Activate'}
                     </button>
                     <button
                       onClick={() => handleEdit(job)}
-                      className="bg-blue-100 text-blue-700 px-3 py-1 text-sm rounded hover:bg-blue-200"
+                      className="btn-secondary text-xs"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(job._id)}
-                      className="bg-red-100 text-red-700 px-3 py-1 text-sm rounded hover:bg-red-200"
+                      className="btn-danger text-xs"
                     >
                       Delete
                     </button>
                   </div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
 
           {jobs.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">No jobs posted yet</p>
+              <p className="text-gray-400 mb-6 text-lg">No jobs posted yet</p>
               <Link
                 to="/post-job"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                className="btn-primary"
               >
                 Post Your First Job
               </Link>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -24,11 +25,11 @@ const EmployerDashboard = () => {
     try {
       const jobsResponse = await jobService.getMyJobs();
       setJobs(jobsResponse);
-      
+
       // Calculate stats
       const totalJobs = jobsResponse.length;
       const activeJobs = jobsResponse.filter(job => job.status === 'active').length;
-      
+
       // Get total applications count
       let totalApplications = 0;
       for (const job of jobsResponse) {
@@ -39,7 +40,7 @@ const EmployerDashboard = () => {
           console.error('Error fetching applications for job:', job._id, err);
         }
       }
-      
+
       setStats({
         totalJobs,
         activeJobs,
@@ -71,126 +72,194 @@ const EmployerDashboard = () => {
     }
   };
 
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'active':
+        return <span className="badge badge-primary">Active</span>;
+      case 'closed':
+        return <span className="badge badge-secondary">Closed</span>;
+      default:
+        return <span className="badge badge-secondary">{status}</span>;
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <LoadingSpinner size="lg" />
+      <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div style={{ minHeight: '100vh', padding: '2rem 0' }}>
+      <div className="container">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
+        <div style={{ 
+          marginBottom: '2rem', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Employer Dashboard</h1>
-            <p className="text-gray-600 mt-2">Welcome back, {user?.name}!</p>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: '900', marginBottom: '0.5rem' }}>
+              Employer Dashboard
+            </h1>
+            <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem' }}>
+              Welcome back, {user?.name}!
+            </p>
           </div>
-          <Link
-            to="/employer/post-job"
-            className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
-          >
+          <Link to="/employer/post-job" className="btn-primary">
             Post New Job
           </Link>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Jobs</h3>
-            <p className="text-3xl font-bold text-primary-600">{stats.totalJobs}</p>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+          gap: '1.5rem', 
+          marginBottom: '2rem' 
+        }}>
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Total Jobs
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#00ffcc' }}>
+              {stats.totalJobs}
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Active Jobs</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.activeJobs}</p>
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Active Jobs
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#74b9ff' }}>
+              {stats.activeJobs}
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Applications</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalApplications}</p>
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Total Applications
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#00ffcc' }}>
+              {stats.totalApplications}
+            </p>
           </div>
         </div>
 
         {/* Jobs List */}
-        <div className="bg-white rounded-lg shadow-md">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">My Job Postings</h2>
+        <div className="glass-card">
+          <div style={{ 
+            padding: '1.5rem', 
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            marginBottom: '1rem'
+          }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#00ffcc' }}>
+              My Job Postings
+            </h2>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 mx-6 mt-4 rounded-md">
+            <div className="alert-error" style={{ margin: '0 1.5rem 1rem' }}>
               {error}
             </div>
           )}
 
           {jobs.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-6xl mb-4">💼</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No jobs posted yet</h3>
-              <p className="text-gray-600 mb-4">Create your first job posting to start receiving applications.</p>
-              <Link
-                to="/employer/post-job"
-                className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
-              >
+            <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: '0.5' }}>💼</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                No jobs posted yet
+              </h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' }}>
+                Create your first job posting to start receiving applications.
+              </p>
+              <Link to="/employer/post-job" className="btn-primary">
                 Post Your First Job
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
-              {jobs.map((job) => (
-                <div key={job._id} className="p-6 hover:bg-gray-50">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+            <div style={{ padding: '0 1.5rem 1.5rem' }}>
+              {jobs.map((job, index) => (
+                <div 
+                  key={job._id} 
+                  className="job-card"
+                  style={{ 
+                    marginBottom: index === jobs.length - 1 ? '0' : '1rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ flex: '1' }}>
+                      <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '0.5rem' }}>
                         <Link
                           to={`/jobs/${job._id}`}
-                          className="hover:text-primary-600"
+                          style={{ 
+                            color: '#00ffcc', 
+                            textDecoration: 'none',
+                            transition: 'color 0.3s ease'
+                          }}
+                          onMouseEnter={(e) => e.target.style.color = '#74b9ff'}
+                          onMouseLeave={(e) => e.target.style.color = '#00ffcc'}
                         >
                           {job.title}
                         </Link>
                       </h3>
-                      <p className="text-gray-600 mb-2">{job.location}</p>
-                      <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+                      <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '1rem', fontSize: '1.1rem' }}>
+                        {job.location}
+                      </p>
+                      <p style={{ 
+                        color: 'rgba(255, 255, 255, 0.7)', 
+                        fontSize: '0.9rem', 
+                        marginBottom: '1rem',
+                        lineHeight: '1.5',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
                         {job.description}
                       </p>
-                      
-                      <div className="flex items-center space-x-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          job.status === 'active' ? 'bg-green-100 text-green-800' :
-                          job.status === 'closed' ? 'bg-red-100 text-red-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
-                          {job.status}
-                        </span>
-                        <span className="text-sm text-gray-500">
+
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        flexWrap: 'wrap',
+                        gap: '1rem'
+                      }}>
+                        {getStatusBadge(job.status)}
+                        <span className="badge badge-secondary">
                           {job.jobType}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>
                           {job.applicationsCount || 0} applications
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>
                           Posted {new Date(job.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
-                    
-                    <div className="ml-4 flex space-x-2">
+
+                    <div style={{ marginLeft: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <Link
                         to={`/employer/jobs/${job._id}/applicants`}
-                        className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                        className="btn-primary"
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                       >
                         View Applicants
                       </Link>
                       <Link
                         to={`/jobs/${job._id}`}
-                        className="text-gray-600 hover:text-gray-700 text-sm font-medium"
+                        className="btn-secondary"
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                       >
                         View Job
                       </Link>
                       <button
                         onClick={() => handleDeleteJob(job._id)}
-                        className="text-red-600 hover:text-red-700 text-sm font-medium"
+                        className="btn-danger"
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                       >
                         Delete
                       </button>

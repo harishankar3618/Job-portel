@@ -40,134 +40,186 @@ const CandidateDashboard = () => {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusBadge = (status) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return <span className="badge badge-secondary">Pending</span>;
       case 'reviewing':
-        return 'bg-blue-100 text-blue-800';
+        return <span className="badge badge-primary">Reviewing</span>;
       case 'shortlisted':
-        return 'bg-green-100 text-green-800';
+        return <span className="badge badge-primary">Shortlisted</span>;
       case 'rejected':
-        return 'bg-red-100 text-red-800';
+        return <span className="badge badge-secondary">Rejected</span>;
       default:
-        return 'bg-gray-100 text-gray-800';
+        return <span className="badge badge-secondary">{status}</span>;
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <LoadingSpinner size="lg" />
+      <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div style={{ minHeight: '100vh', padding: '2rem 0' }}>
+      <div className="container">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user?.name}!</h1>
-          <p className="text-gray-600 mt-2">Track your job applications and manage your profile</p>
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: '900', marginBottom: '0.5rem' }}>
+            Welcome back, {user?.name}!
+          </h1>
+          <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem' }}>
+            Track your job applications and manage your profile
+          </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Applications</h3>
-            <p className="text-3xl font-bold text-primary-600">{applications.length}</p>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+          gap: '1.5rem', 
+          marginBottom: '2rem' 
+        }}>
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Total Applications
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#00ffcc' }}>
+              {applications.length}
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Pending</h3>
-            <p className="text-3xl font-bold text-yellow-600">
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Pending
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#74b9ff' }}>
               {applications.filter(app => app.status === 'pending').length}
             </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Shortlisted</h3>
-            <p className="text-3xl font-bold text-green-600">
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Shortlisted
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#00ffcc' }}>
               {applications.filter(app => app.status === 'shortlisted').length}
             </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Rejected</h3>
-            <p className="text-3xl font-bold text-red-600">
+          <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#00ffcc' }}>
+              Rejected
+            </h3>
+            <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#ff4757' }}>
               {applications.filter(app => app.status === 'rejected').length}
             </p>
           </div>
         </div>
 
         {/* Applications List */}
-        <div className="bg-white rounded-lg shadow-md">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">My Applications</h2>
+        <div className="glass-card">
+          <div style={{ 
+            padding: '1.5rem', 
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            marginBottom: '1rem'
+          }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#00ffcc' }}>
+              My Applications
+            </h2>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 mx-6 mt-4 rounded-md">
+            <div className="alert-error" style={{ margin: '0 1.5rem 1rem' }}>
               {error}
             </div>
           )}
 
           {applications.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-6xl mb-4">📄</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No applications yet</h3>
-              <p className="text-gray-600 mb-4">Start applying for jobs to see your applications here.</p>
-              <Link
-                to="/"
-                className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
-              >
+            <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: '0.5' }}>📄</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                No applications yet
+              </h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' }}>
+                Start applying for jobs to see your applications here.
+              </p>
+              <Link to="/" className="btn-primary">
                 Browse Jobs
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
-              {applications.map((application) => (
-                <div key={application._id} className="p-6 hover:bg-gray-50">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+            <div style={{ padding: '0 1.5rem 1.5rem' }}>
+              {applications.map((application, index) => (
+                <div 
+                  key={application._id} 
+                  className="job-card"
+                  style={{ 
+                    marginBottom: index === applications.length - 1 ? '0' : '1rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ flex: '1' }}>
+                      <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '0.5rem' }}>
                         <Link
                           to={`/jobs/${application.job._id}`}
-                          className="hover:text-primary-600"
+                          style={{ 
+                            color: '#00ffcc', 
+                            textDecoration: 'none',
+                            transition: 'color 0.3s ease'
+                          }}
+                          onMouseEnter={(e) => e.target.style.color = '#74b9ff'}
+                          onMouseLeave={(e) => e.target.style.color = '#00ffcc'}
                         >
                           {application.job.title}
                         </Link>
                       </h3>
-                      <p className="text-gray-600 mb-2">{application.job.company}</p>
-                      <p className="text-sm text-gray-500">{application.job.location}</p>
-                      
-                      <div className="mt-3 flex items-center space-x-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(application.status)}`}>
-                          {application.status}
-                        </span>
-                        <span className="text-sm text-gray-500">
+                      <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+                        {application.job.company}
+                      </p>
+                      <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.9rem' }}>
+                        {application.job.location}
+                      </p>
+
+                      <div style={{ 
+                        marginTop: '1rem', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        flexWrap: 'wrap',
+                        gap: '1rem'
+                      }}>
+                        {getStatusBadge(application.status)}
+                        <span style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>
                           Applied {new Date(application.appliedAt).toLocaleDateString()}
                         </span>
                       </div>
-                      
+
                       {application.notes && (
-                        <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                          <p className="text-sm text-gray-700">
-                            <span className="font-medium">Notes:</span> {application.notes}
+                        <div className="glass-card" style={{ 
+                          marginTop: '1rem', 
+                          padding: '1rem',
+                          background: 'rgba(255, 255, 255, 0.05)'
+                        }}>
+                          <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                            <span style={{ fontWeight: '600', color: '#00ffcc' }}>Notes:</span> {application.notes}
                           </p>
                         </div>
                       )}
                     </div>
-                    
-                    <div className="ml-4 flex space-x-2">
+
+                    <div style={{ marginLeft: '1rem', display: 'flex', gap: '0.5rem' }}>
                       <Link
                         to={`/jobs/${application.job._id}`}
-                        className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                        className="btn-secondary"
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                       >
                         View Job
                       </Link>
                       {application.status === 'pending' && (
                         <button
                           onClick={() => handleWithdraw(application._id)}
-                          className="text-red-600 hover:text-red-700 text-sm font-medium"
+                          className="btn-danger"
+                          style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                         >
                           Withdraw
                         </button>

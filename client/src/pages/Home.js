@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { jobService } from '../services/jobService';
 import JobCard from '../components/JobCard';
@@ -23,7 +24,7 @@ const Home = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const params = {
         ...searchFilters,
         page,
@@ -55,50 +56,57 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh' }}>
       {/* Hero Section */}
-      <div className="bg-primary-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Find Your Dream Job
-          </h1>
-          <p className="text-xl md:text-2xl mb-8">
-            Discover thousands of job opportunities from top companies
-          </p>
-        </div>
+      <div className="hero-section">
+        <h1 className="hero-title">
+          Find Your Dream Job
+        </h1>
+        <p className="hero-subtitle">
+          Discover thousands of job opportunities from top companies
+        </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
         {/* Search Filters */}
-        <SearchFilters onSearch={handleSearch} loading={loading} />
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <SearchFilters onSearch={handleSearch} loading={loading} />
+        </div>
 
         {/* Results Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900">
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '2rem',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: '700', color: '#00ffcc' }}>
             {pagination.total > 0 ? `${pagination.total} Jobs Found` : 'No Jobs Found'}
           </h2>
-          <div className="text-sm text-gray-600">
+          <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>
             Page {pagination.currentPage} of {pagination.totalPages}
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+          <div className="alert-error" style={{ marginBottom: '2rem' }}>
             {error}
           </div>
         )}
 
         {/* Loading Spinner */}
         {loading && (
-          <div className="flex justify-center py-12">
-            <LoadingSpinner size="lg" />
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0' }}>
+            <div className="loading-spinner"></div>
           </div>
         )}
 
         {/* Jobs List */}
         {!loading && jobs.length > 0 && (
-          <div className="space-y-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {jobs.map((job) => (
               <JobCard key={job._id} job={job} />
             ))}
@@ -107,52 +115,48 @@ const Home = () => {
 
         {/* No Jobs Message */}
         {!loading && jobs.length === 0 && !error && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No jobs found</h3>
-            <p className="text-gray-600">Try adjusting your search criteria or check back later for new opportunities.</p>
+          <div className="glass-card" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+            <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: '0.5' }}>🔍</div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+              No jobs found
+            </h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              Try adjusting your search criteria or check back later for new opportunities.
+            </p>
           </div>
         )}
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex justify-center mt-8">
-            <nav className="flex space-x-2">
-              <button
-                onClick={() => handlePageChange(pagination.currentPage - 1)}
-                disabled={pagination.currentPage === 1}
-                className="px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              
-              {[...Array(pagination.totalPages)].map((_, index) => {
-                const page = index + 1;
-                const isCurrentPage = page === pagination.currentPage;
-                
-                return (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-3 py-2 rounded-md ${
-                      isCurrentPage
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
-              
-              <button
-                onClick={() => handlePageChange(pagination.currentPage + 1)}
-                disabled={pagination.currentPage === pagination.totalPages}
-                className="px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </nav>
+          <div className="pagination">
+            <button
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              disabled={pagination.currentPage === 1}
+            >
+              Previous
+            </button>
+
+            {[...Array(pagination.totalPages)].map((_, index) => {
+              const page = index + 1;
+              const isCurrentPage = page === pagination.currentPage;
+
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={isCurrentPage ? 'active' : ''}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              disabled={pagination.currentPage === pagination.totalPages}
+            >
+              Next
+            </button>
           </div>
         )}
       </div>

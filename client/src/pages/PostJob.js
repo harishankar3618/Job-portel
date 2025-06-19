@@ -4,18 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import JobForm from '../components/JobForm';
 import { jobService } from '../services/jobService';
 
-// REMOVE this line: await jobService.createJob(jobData);
-
 const PostJob = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
-
+  
   const handleSubmit = async (jobData) => {
     setLoading(true);
     setError('');
-
     try {
       await jobService.createJob(jobData);
       navigate('/employer-dashboard');
@@ -27,18 +24,20 @@ const PostJob = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">Post a New Job</h1>
+    <div className="min-h-screen py-8">
+      <div className="container">
+        <div className="form-container">
+          <h1 className="hero-title text-center mb-8" style={{ fontSize: '2.5rem' }}>
+            Post a New Job
+          </h1>
           
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            <div className="alert-error mb-6">
               {error}
             </div>
           )}
-
-          <JobForm 
+          
+          <JobForm
             onSubmit={handleSubmit}
             loading={loading}
             submitText="Post Job"

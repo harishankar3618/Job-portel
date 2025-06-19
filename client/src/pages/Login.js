@@ -57,33 +57,33 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+      <div className="form-container w-full max-w-md">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-extrabold text-white mb-4">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="text-gray-300">
             Or{' '}
             <Link
               to="/register"
-              className="font-medium text-primary-600 hover:text-primary-500"
+              className="font-medium text-cyan-300 hover:text-cyan-200 transition-colors"
             >
               create a new account
             </Link>
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <div className="alert-error">
               {error}
             </div>
           )}
 
           <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
               <input
@@ -94,13 +94,13 @@ const Login = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                className="glass-input"
                 placeholder="Enter your email"
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <input
@@ -111,7 +111,7 @@ const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                className="glass-input"
                 placeholder="Enter your password"
               />
             </div>
@@ -121,20 +121,10 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full"
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
-          </div>
-
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Demo accounts:
-            </p>
-            <div className="mt-2 space-y-1 text-xs text-gray-500">
-              <p>Candidate: candidate@demo.com / password123</p>
-              <p>Employer: employer@demo.com / password123</p>
-            </div>
           </div>
         </form>
       </div>

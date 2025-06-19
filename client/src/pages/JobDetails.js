@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -94,7 +95,7 @@ const JobDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <LoadingSpinner size="lg" />
+        <div className="loading-spinner"></div>
       </div>
     );
   }
@@ -102,12 +103,12 @@ const JobDetails = () => {
   if (error || !job) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Job Not Found</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+        <div className="text-center glass-card p-8">
+          <h2 className="text-2xl font-bold mb-4">Job Not Found</h2>
+          <p className="text-gray-300 mb-4">{error}</p>
           <button
             onClick={() => navigate('/')}
-            className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
+            className="btn-primary"
           >
             Back to Jobs
           </button>
@@ -117,26 +118,26 @@ const JobDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="bg-primary-600 text-white p-6">
+    <div className="min-h-screen py-8">
+      <div className="container">
+        <div className="glass-card overflow-hidden">
+          <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-filter backdrop-blur-lg p-6 border-b border-white/10">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-3xl font-bold mb-2">{job.title}</h1>
-                <p className="text-xl mb-2">{job.company}</p>
-                <p className="text-primary-100">{job.location}</p>
+                <h1 className="text-3xl font-bold mb-2 text-white">{job.title}</h1>
+                <p className="text-xl mb-2 text-cyan-300">{job.company}</p>
+                <p className="text-gray-300">{job.location}</p>
               </div>
               <div className="text-right">
-                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                  job.jobType === 'full-time' ? 'bg-green-500' :
-                  job.jobType === 'part-time' ? 'bg-blue-500' :
-                  job.jobType === 'contract' ? 'bg-yellow-500' :
-                  'bg-purple-500'
-                } text-white`}>
+                <span className={`badge ${
+                  job.jobType === 'full-time' ? 'badge-primary' :
+                  job.jobType === 'part-time' ? 'badge-secondary' :
+                  job.jobType === 'contract' ? 'badge-secondary' :
+                  'badge-secondary'
+                }`}>
                   {job.jobType}
                 </span>
-                <div className="mt-2 text-primary-100">
+                <div className="mt-2 text-gray-300">
                   Posted {new Date(job.createdAt).toLocaleDateString()}
                 </div>
               </div>
@@ -147,24 +148,24 @@ const JobDetails = () => {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-2">
                 <div className="mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-4">Job Description</h2>
-                  <p className="text-gray-700 whitespace-pre-line">{job.description}</p>
+                  <h2 className="text-2xl font-semibold text-white mb-4">Job Description</h2>
+                  <p className="text-gray-300 whitespace-pre-line leading-relaxed">{job.description}</p>
                 </div>
 
                 {job.requirements && (
                   <div className="mb-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">Requirements</h3>
-                    <p className="text-gray-700 whitespace-pre-line">{job.requirements}</p>
+                    <h3 className="text-xl font-semibold text-white mb-3">Requirements</h3>
+                    <p className="text-gray-300 whitespace-pre-line leading-relaxed">{job.requirements}</p>
                   </div>
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Required Skills</h3>
+                  <h3 className="text-xl font-semibold text-white mb-3">Required Skills</h3>
                   <div className="flex flex-wrap gap-2">
                     {job.skills?.map((skill, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm"
+                        className="badge badge-secondary"
                       >
                         {skill}
                       </span>
@@ -174,42 +175,42 @@ const JobDetails = () => {
               </div>
 
               <div className="md:col-span-1">
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Job Details</h3>
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold text-white mb-4">Job Details</h3>
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Salary</p>
-                      <p className="text-lg font-semibold text-gray-900">{formatSalary(job.salary)}</p>
+                      <p className="text-sm font-medium text-cyan-300">Salary</p>
+                      <p className="text-lg font-semibold text-white">{formatSalary(job.salary)}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Job Type</p>
-                      <p className="text-gray-900 capitalize">{job.jobType}</p>
+                      <p className="text-sm font-medium text-cyan-300">Job Type</p>
+                      <p className="text-white capitalize">{job.jobType}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Location</p>
-                      <p className="text-gray-900">{job.location}</p>
+                      <p className="text-sm font-medium text-cyan-300">Location</p>
+                      <p className="text-white">{job.location}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Company</p>
-                      <p className="text-gray-900">{job.company}</p>
+                      <p className="text-sm font-medium text-cyan-300">Company</p>
+                      <p className="text-white">{job.company}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Applications</p>
-                      <p className="text-gray-900">{job.applicationsCount || 0} applicants</p>
+                      <p className="text-sm font-medium text-cyan-300">Applications</p>
+                      <p className="text-white">{job.applicationsCount || 0} applicants</p>
                     </div>
                   </div>
 
                   {isCandidate && (
                     <div className="mt-6">
                       {hasApplied ? (
-                        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+                        <div className="alert-success">
                           <p className="font-medium">Already Applied</p>
                           <p className="text-sm">You have already applied for this position.</p>
                         </div>
                       ) : (
                         <form onSubmit={handleApply} className="space-y-4" encType="multipart/form-data">
                           <div>
-                            <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="coverLetter" className="form-label">
                               Cover Letter
                             </label>
                             <textarea
@@ -220,14 +221,14 @@ const JobDetails = () => {
                               onChange={(e) =>
                                 setApplicationData({ ...applicationData, coverLetter: e.target.value })
                               }
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                              className="glass-input"
                               placeholder="Write a brief cover letter..."
                               required
                             />
                           </div>
 
                           <div>
-                            <label htmlFor="resume" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="resume" className="form-label">
                               Upload Resume (PDF)
                             </label>
                             <input
@@ -238,17 +239,17 @@ const JobDetails = () => {
                               onChange={(e) =>
                                 setApplicationData({ ...applicationData, resume: e.target.files[0] })
                               }
-                              className="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm"
+                              className="glass-input"
                               required
                             />
                           </div>
 
-                          {error && <p className="text-red-600 text-sm">{error}</p>}
+                          {error && <div className="alert-error">{error}</div>}
 
                           <button
                             type="submit"
                             disabled={applying}
-                            className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="btn-primary w-full"
                           >
                             {applying ? 'Applying...' : 'Apply Now'}
                           </button>
@@ -261,7 +262,7 @@ const JobDetails = () => {
                     <div className="mt-6">
                       <button
                         onClick={() => navigate('/login')}
-                        className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                        className="btn-primary w-full"
                       >
                         Login to Apply
                       </button>
