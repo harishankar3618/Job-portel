@@ -33,3 +33,5 @@ coverage/
 # Optional: test results
 *.test.*
 jest.config.js
+
+server/uploads/resumes/
